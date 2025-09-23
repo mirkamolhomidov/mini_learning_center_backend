@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Teacher_Group extends Model
+class TeacherGroup extends Model
 {
     use HasFactory;
-
+    protected $table = 'teacher_groups';
     protected $keyType ='string';
     public $incrementing = false;
     public $timestamps = false;

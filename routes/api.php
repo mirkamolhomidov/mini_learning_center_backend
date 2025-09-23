@@ -8,8 +8,6 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentGroupController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherGroupController;
-use App\Models\Student;
-use App\Models\Teacher_Group;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +29,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::resource('subjects', SubjectController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
     Route::resource('groups', GroupController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
     Route::resource('lessons', LessonController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
+    Route::resource('students', StudentController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
     Route::resource('staffs', StaffController::class, ['except' => ['index', 'store', 'show', 'update', 'updateRole', 'destroy']]);
     
     Route::get('/student-groups', [StudentGroupController::class, 'index']);

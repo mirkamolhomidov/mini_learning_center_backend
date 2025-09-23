@@ -3,24 +3,24 @@
 namespace App\Services;
 
 use App\Models\Group;
-use App\Models\Student_group;
+use App\Models\StudentGroup;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StudentGroupService
 {
     public function getAllGroups()
     {
-        return Student_group::with('student')->with('group')->get();
+        return StudentGroup::with('student')->with('group')->get();
     }
 
     public function getOneStudentGroups($student_id)
     {
-        return Student_group::with('group')->where('student_id', $student_id)->get();
+        return StudentGroup::with('group')->where('student_id', $student_id)->get();
     }
 
     public function getStudentLessons($student_id)
     {
-        $groups = Student_group::with('group.lesson')->where('student_id', $student_id)->get();
+        $groups = StudentGroup::with('group.lesson')->where('student_id', $student_id)->get();
 
         return $groups->pluck('group.lesson')->flatten();
     }
@@ -42,6 +42,7 @@ class StudentGroupService
                 }
             }
         }
+
         return false;
     }
 
@@ -49,21 +50,21 @@ class StudentGroupService
     {
         $group = Group::findOrFail($group_id);
 
-        $exists = Student_group::where('student_id', $student_id)
+        $exists = StudentGroup::where('student_id', $student_id)
             ->where('group_id', $group_id)
             ->exists();
 
         if ($exists) {
             throw new HttpResponseException(
-              response()->json(['error' => 'Student allaqachon guruhda mavjud'], 400));
+                response()->json(['error' => 'Student allaqachon guruhda mavjud'], 400));
         }
         if ($this->checkScheduleConflicts($student_id, $group_id)) {
             throw new HttpResponseException(
-              response()->json(['error' => 'Student dars jadvali mos kelmaydi'], 400)
+                response()->json(['error' => 'Student dars jadvali mos kelmaydi'], 400)
             );
-        } 
+        }
 
-        Student_group::create([
+        StudentGroup::create([
             'student_id' => $student_id,
             'group_id' => $group_id,
             'status' => 'active',
@@ -74,7 +75,7 @@ class StudentGroupService
 
     public function deleteStudentGroup($student_id, $group_id)
     {
-        $row = Student_group::where('student_id', $student_id)
+        $row = StudentGroup::where('student_id', $student_id)
             ->where('group_id', $group_id)->first();
         if (! $row) {
             throw new \Exception('Student guruh topilmadi', 404);

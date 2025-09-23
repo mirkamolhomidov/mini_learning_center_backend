@@ -3,24 +3,30 @@
 namespace App\Services;
 
 use App\Models\Group;
-use App\Models\Teacher_Group;
+use App\Models\TeacherGroup;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TeacherGroupService
 {
     public function getAllGroups()
     {
-        return Teacher_Group::with('teacher')->with('group')->get();
+        return TeacherGroup::with('teacher')->with('group')->get();
     }
 
     public function getOneTeacherGroups($teacher_id)
     {
-        return Teacher_Group::with('group')->where('teacher_id', $teacher_id)->get();
+        $groups = TeacherGroup::with('group')->where('teacher_id', $teacher_id)->get();
+        if($groups){
+            return $groups;
+        }else{
+          throw new HttpResponseException(
+            response()->json(['error' => 'Teacher allaqachon guruhda mavjud'], 400));
+        }
     }
 
     public function getTeacherLessons($teacher_id)
     {
-        $groups = Teacher_Group::with('group.lesson')->where('teacher_id', $teacher_id)->get();
+        $groups = TeacherGroup::with('group.lesson')->where('teacher_id', $teacher_id)->get();
 
         return $groups->pluck('group.lesson')->flatten();
     }
@@ -50,7 +56,7 @@ class TeacherGroupService
     {
         $group = Group::findOrFail($group_id);
 
-        $exists = Teacher_Group::where('teacher_id', $teacher_id)
+        $exists = TeacherGroup::where('teacher_id', $teacher_id)
             ->where('group_id', $group_id)
             ->exists();
 
@@ -64,7 +70,7 @@ class TeacherGroupService
             );
         }
 
-        Teacher_Group::create([
+        TeacherGroup::create([
             'teacher_id' => $teacher_id,
             'group_id' => $group_id,
             'status' => 'active',
@@ -75,7 +81,7 @@ class TeacherGroupService
 
     public function deleteTeacherGroup($teacher_id, $group_id)
     {
-        $row = Teacher_Group::where('teacher_id', $teacher_id)
+        $row = TeacherGroup::where('teacher_id', $teacher_id)
             ->where('group_id', $group_id)->first();
         if (! $row) {
             throw new \Exception('Teacher guruh topilmadi', 404);
