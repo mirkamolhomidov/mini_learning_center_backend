@@ -25,7 +25,7 @@ namespace App\Services;
           if (!$staff || !Hash::check($credentials['password'], $staff->password)) {
               return null;
           }
-          $token = $staff->createToken('auth_token', ['id:' . $staff->id, 'role:' . $staff->role])->plainTextToken;
+          $token = $staff->createToken('sanc_token', ['id:' . $staff->id, 'role:' . $staff->role])->plainTextToken;
           return [
               'staff' => $staff,
               'token' => $token,

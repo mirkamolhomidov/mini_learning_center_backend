@@ -38,7 +38,8 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Muvaffaqiyatli login',
             'staff' => $result['staff'],
-        ])->cookie('auth_token', $result['token'], 60 * 24, '/', null, true, true);
+            'token' => $result['token'],
+        ]);
     }
 
     public function logout(Request $request)
