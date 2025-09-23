@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Subject;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SubjectService
 {
@@ -16,7 +17,9 @@ class SubjectService
     if ($subject) {
       return $subject;
     }else {
-      throw new \App\Exceptions\SubjectNotFoundException("Subject not found");
+      throw new HttpResponseException(
+        response()->json(["Subject not found"], 404)
+      );
     }
   }
   public function createSubject($data)
@@ -31,7 +34,9 @@ class SubjectService
       $subject->update($data);
       return $subject;
     }else {
-      throw new \App\Exceptions\SubjectNotFoundException("Subject not found");
+      throw new HttpResponseException(
+        response()->json(["Subject not found"], 404)
+      );
     }
   }
   public function deleteSubject($id)
@@ -42,7 +47,9 @@ class SubjectService
       $subject->delete();
       return ['message' => 'Subject deleted successfully'];
     }else {
-      throw new \App\Exceptions\SubjectNotFoundException("Subject not found");
+      throw new HttpResponseException(
+        response()->json(["Subject not found"], 404)
+      );
     }
   }
 }

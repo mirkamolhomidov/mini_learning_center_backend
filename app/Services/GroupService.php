@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Group;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GroupService
 {
@@ -16,7 +17,9 @@ class GroupService
     if ($group) {
       return $group;
     }else {
-      throw new \App\Exceptions\GroupNotFoundException("Group not found");
+      throw new HttpResponseException(
+        response()->json(["Group not found"], 404)
+      );
     }
   }
   public function createGroup($data)
@@ -31,7 +34,9 @@ class GroupService
       $group->update($data);
       return $group;
     }else {
-      throw new \App\Exceptions\GroupNotFoundException("Group not found");
+      throw new HttpResponseException(
+        response()->json(["Group not found"], 404)
+      );
     }
   }
   public function deleteGroup($id)
@@ -42,7 +47,9 @@ class GroupService
       $group->delete();
       return ['message' => 'Group deleted successfully'];
     }else {
-      throw new \App\Exceptions\GroupNotFoundException("Group not found");
+      throw new HttpResponseException(
+        response()->json(["Group not found"], 404)
+      );
     }
   }
 }

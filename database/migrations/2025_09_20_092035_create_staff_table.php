@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('age');
             $table->string('phone_number', 50)->unique();
             $table->enum('role', ['admin', 'staff'])->default('staff');
-            $table->timestamps();
         });
     }
 

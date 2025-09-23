@@ -11,6 +11,7 @@ class Staff extends Authenticatable
 {
     use HasApiTokens, HasFactory;
     protected $table = 'staffs';
+    public $timestamps = false;
     protected $keyType = 'string';
     public $incrementing = false;
 

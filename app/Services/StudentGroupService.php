@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Group;
+use App\Models\Student;
 use App\Models\StudentGroup;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -48,8 +49,10 @@ class StudentGroupService
 
     public function addStudentToGroup($student_id, $group_id)
     {
-        $group = Group::findOrFail($group_id);
-
+        $group = Group::find($group_id);
+        $student = Student::find($student_id);
+        if (!$group) throw new HttpResponseException(response()->json(['error' => 'Guruh mavjud emas'], 400));
+        if (!$student) throw new HttpResponseException(response()->json(['error' => 'Student mavjud emas'], 400));
         $exists = StudentGroup::where('student_id', $student_id)
             ->where('group_id', $group_id)
             ->exists();

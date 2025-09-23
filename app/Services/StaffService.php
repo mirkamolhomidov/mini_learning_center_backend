@@ -16,7 +16,7 @@ class StaffService{
         $staff = Staff::find($staff_id);
         if(!$staff){
             throw new HttpResponseException(
-              response()->json(['messge' => 'Staff not found'], 404)
+              response()->json(['message' => 'Staff not found'], 404)
             );
         }
         return $staff;
@@ -39,8 +39,8 @@ class StaffService{
         if(isset($data['password'])){
             $data['password'] = Hash::make($data['password']);
         }
-        $staff = $staff->update($data);
-        return $staff;
+        $staff->update($data);
+        return ['message' => 'Staff updated'];
     }
     public function updateStaffRole($role, $staff_id)
     {

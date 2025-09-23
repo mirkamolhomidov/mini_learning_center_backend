@@ -36,11 +36,11 @@ class GroupRequest extends FormRequest
         }elseif(in_array($method, ['PUT', 'PATCH']))
         {
             return [
-                'title' => 'required|string|max:50',
-                'subject_id' => 'required|integer',
-                'students' => 'required|integer|min:10',
-                'status' => 'required|string|max:8',
-                'start_date' => 'required|date',
+                'title' => 'sometimes|string|max:50',
+                'subject_id' => 'sometimes|integer',
+                'students' => 'sometimes|integer|min:10',
+                'status' => 'sometimes|string|max:8',
+                'start_date' => 'sometimes|date',
             ];
         };
         return [];

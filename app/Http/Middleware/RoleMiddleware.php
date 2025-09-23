@@ -4,34 +4,49 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        $user = Auth::user();
-
+        $user = $request->user();
         if (!$user) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
+            return response()->json([
+                'error' => 'Unauthenticated',
+                'message' => 'Ro\'yxatdan o\'tmagansiz'
+            ], 401);
         }
-
-        $tokenRole = $request->user()->currentAccessToken()->abilities;
+        $currentToken = $user->currentAccessToken();
+        if (!$currentToken) {
+            return response()->json([
+                'error' => 'Unauthenticated', 
+                'message' => 'Ro\'yxatdan o\'tmagansiz'
+            ], 401);
+        }
+        $abilities = $currentToken->abilities ?? [];
         $role = null;
-        foreach ($tokenRole as $ability) {
+        $userId = null;
+        foreach ($abilities as $ability) {
             if (str_starts_with($ability, 'role:')) {
                 $role = str_replace('role:', '', $ability);
             }
             if (str_starts_with($ability, 'id:')) {
                 $userId = str_replace('id:', '', $ability);
-            }        
-        }    
-
-        if (!$role || !in_array($role, $roles)) {
-            return response()->json(['error' => 'Forbidden'], 403);
+            }
         }
-
-        $request->merge(['user_id' => $userId]);
+        if (!$role) {
+            return response()->json([
+                'error' => 'Forbidden',
+                'message' => 'Kirish mumkin emas'
+            ], 403);
+        }
+        if (!in_array($role, $roles)) {
+            return response()->json([
+                'error' => 'Forbidden',
+                'message' => 'Kirish mumkin emas'
+            ], 403);
+        }
+        $request->merge(['user_id' => $userId, 'role' => $role]);
 
         return $next($request);
     }

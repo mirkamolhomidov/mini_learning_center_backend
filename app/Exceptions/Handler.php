@@ -2,14 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 use Illuminate\Support\Facades\Log;
-
-class SubjectNotFoundException extends \Exception {}
-class GroupNotFoundException extends \Exception {}
-class LessonNotFoundException extends \Exception {}
-class StudentNotFoundException extends \Exception {}
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -40,11 +36,19 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($request->expectsJson() || $request->is('api/*')) {
+            if ($exception instanceof QueryException) {
+                if (str_contains($exception->getMessage(), 'invalid input syntax for type uuid')) {
+                    return response()->json([
+                        'error' => 'id xato',
+                    ], 400);
+                }
+            }
+
             return response()->json([
-                'error' => $exception->getMessage()
+                'error' => $exception->getMessage(),
             ], 500);
         }
-        
+
         return parent::render($request, $exception);
     }
 }

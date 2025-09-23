@@ -1,7 +1,9 @@
 <?php
 namespace App\Services;
 
+use App\Models\Group;
 use App\Models\Lesson;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LessonService
 {
@@ -16,11 +18,15 @@ class LessonService
     if ($lesson) {
       return $lesson;
     }else {
-      throw new \App\Exceptions\LessonNotFoundException("Lesson not found");
+      throw new HttpResponseException(
+        response()->json(["Lesson not found"], 404)
+      );
     }
   }
   public function createLesson($data)
   {
+    $group = Group::find($data->group_id);
+    if(!$group) throw new HttpResponseException(response()->json(['Group not found'], 400));
     return Lesson::create($data);
   }
   public function updateLesson($id, $data)
@@ -31,7 +37,9 @@ class LessonService
       $lesson->update($data);
       return $lesson;
     }else {
-      throw new \App\Exceptions\LessonNotFoundException("Lesson not found");
+      throw new HttpResponseException(
+        response()->json(["Lesson not found"], 404)
+      );
     }
   }
   public function deleteLesson($id)
@@ -42,7 +50,9 @@ class LessonService
       $lesson->delete();
       return ['message' => 'Lesson deleted successfully'];
     }else {
-      throw new \App\Exceptions\LessonNotFoundException("Lesson not found");
+      throw new HttpResponseException(
+        response()->json(["Lesson not found"], 404)
+      );
     }
   }
 }

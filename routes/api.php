@@ -21,16 +21,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Auth
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Teacher
+Route::middleware(['auth:sanctum', 'role:staff'])->group(function () {
+    Route::put('/teacher-update', [StaffController::class, 'update']);
+    Route::get('/teacher-groups', [TeacherGroupController::class, 'show']);
+    Route::get('/teacher-lessons', [TeacherGroupController::class, 'lessons']);
+});
+
+// Admin
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::resource('subjects', SubjectController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
-    Route::resource('groups', GroupController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
-    Route::resource('lessons', LessonController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
-    Route::resource('students', StudentController::class, ['except' => ['index', 'store', 'show', 'update', 'destroy']]);
-    Route::resource('staffs', StaffController::class, ['except' => ['index', 'store', 'show', 'update', 'updateRole', 'destroy']]);
+    Route::resource('subjects', SubjectController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
+    Route::resource('groups', GroupController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
+    Route::resource('lessons', LessonController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
+    Route::resource('students', StudentController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
+
+    Route::put('/staffs/{id}/role', [StaffController::class, 'updateRole']);
+    Route::resource('staffs', StaffController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
     
     Route::get('/student-groups', [StudentGroupController::class, 'index']);
     Route::get('/student-groups/{id}', [StudentGroupController::class, 'lessons']);
@@ -39,12 +50,6 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::delete('/student-groups/{id}', [StudentGroupController::class, 'deleteStudent']);
 
     Route::get('/teacher-groups', [TeacherGroupController::class, 'index']);
-    Route::post('/teacher-groups{id}', [TeacherGroupController::class, 'addTeacher']);
-    Route::delete('/teacher-groups{id}', [TeacherGroupController::class, 'deleteTeacher']);
-});
-
-Route::middleware(['auth:sanctum', 'role:staff'])->group(function () {
-    Route::put('teacher-update', [StaffController::class, 'update']);
-    Route::get('/teacher-groups', [TeacherGroupController::class, 'show']);
-    Route::get('/teacher-lessons', [TeacherGroupController::class, 'lessons']);
+    Route::post('/teacher-groups/{id}', [TeacherGroupController::class, 'addTeacher']);
+    Route::delete('/teacher-groups/{id}', [TeacherGroupController::class, 'deleteTeacher']);
 });
