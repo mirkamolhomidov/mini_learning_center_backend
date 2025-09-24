@@ -32,16 +32,6 @@ class StaffController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StaffRequest $request)
-    {
-        $validated = $request->validated();
-        $staff = $this->staffService->createStaff($validated);
-        return response()->json($staff);
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show($id)
@@ -61,6 +51,13 @@ class StaffController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function updateTeacher(StaffRequest $request)
+    {
+        $data = $request->validated();
+        $id = $request['user_id'];
+        $staff = $this->staffService->updateStaff($data, $id);
+        return response()->json($staff);
+    }
     public function update(StaffRequest $request, $id)
     {
         $data = $request->validated();

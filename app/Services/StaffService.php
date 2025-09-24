@@ -21,12 +21,6 @@ class StaffService{
         }
         return $staff;
     }
-    public function createStaff($data)
-    {
-        $data['password'] = Hash::make($data['password']);
-        $staff = Staff::create($data);
-        return $staff;
-    }
     public function updateStaff($data, $staff_id)
     {
         $staff = Staff::find($staff_id);
