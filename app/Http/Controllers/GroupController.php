@@ -13,6 +13,12 @@ class GroupController extends Controller
     {
       $this->groupService = $groupService;
     }
+   
+
+    public function store2()
+    {
+
+    }
     /**
      * Display a listing of the resource.
      */
