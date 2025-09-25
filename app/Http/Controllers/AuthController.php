@@ -15,7 +15,11 @@ class AuthController extends Controller
     {
         $this->authService = $authService;
     }
-
+    
+    public function registerForm()
+    {
+      return view('auth.register');
+    }
     public function register(AuthRequest $request)
     {
         $validated = $request->validated();
