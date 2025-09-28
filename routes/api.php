@@ -40,6 +40,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::resource('lessons', LessonController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
     Route::resource('students', StudentController::class, ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
 
+    Route::get('group-students/{id}', [GroupController::class, 'groupStudents']);
+
     Route::put('/staffs/{id}/role', [StaffController::class, 'updateRole']);
     Route::resource('staffs', StaffController::class, ['only' => ['index', 'show', 'update', 'destroy']]);
     

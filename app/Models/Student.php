@@ -11,19 +11,24 @@ class Student extends Model
     use HasFactory;
 
     protected $keyType = 'string';
+
     public $incrementing = false;
-    
+
     protected $fillable = ['full_name', 'score'];
 
     protected static function booted()
     {
-      parent::booted();
+        parent::booted();
 
-      static::creating(function ($model) {
-        if(empty($model->{$model->getKeyName()})){
-          $model->{$model->getKeyName()} = (string) Str::uuid();
-        }
-      });
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
     }
 
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'student_groups', 'student_id', 'group_id');
+    }
 }
