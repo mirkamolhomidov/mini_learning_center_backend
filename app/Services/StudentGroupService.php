@@ -16,7 +16,12 @@ class StudentGroupService
 
     public function getOneStudentGroups($student_id)
     {
-        return StudentGroup::with('group')->where('student_id', $student_id)->get();
+        $groups = StudentGroup::with('group')->where('student_id', $student_id)->get();
+        if (! $groups) {
+            throw new HttpResponseException(response()->json(['error' => 'O\'quvchi guruhga biriktirilmagan'], 400));
+        }
+
+        return $groups;
     }
 
     public function getStudentLessons($student_id)
@@ -51,8 +56,14 @@ class StudentGroupService
     {
         $group = Group::find($group_id);
         $student = Student::find($student_id);
-        if (!$group) throw new HttpResponseException(response()->json(['error' => 'Guruh mavjud emas'], 400));
-        if (!$student) throw new HttpResponseException(response()->json(['error' => 'Student mavjud emas'], 400));
+
+        if (! $group) {
+            throw new HttpResponseException(response()->json(['error' => 'Guruh mavjud emas'], 400));
+        }
+        if (! $student) {
+            throw new HttpResponseException(response()->json(['error' => 'Student mavjud emas'], 400));
+        }
+
         $exists = StudentGroup::where('student_id', $student_id)
             ->where('group_id', $group_id)
             ->exists();

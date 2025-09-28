@@ -29,8 +29,9 @@ class TeacherGroupController extends Controller
         return response()->json($groups);
     }
 
-    public function lessons($id)
+    public function lessons(Request $request)
     {
+        $id = $request->user_id;
         $lessons = $this->teacherGroupService->getTeacherLessons($id);
 
         return response()->json($lessons);

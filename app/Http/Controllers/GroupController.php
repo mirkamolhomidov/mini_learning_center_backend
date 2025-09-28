@@ -13,12 +13,6 @@ class GroupController extends Controller
     {
       $this->groupService = $groupService;
     }
-   
-
-    public function store2()
-    {
-
-    }
     /**
      * Display a listing of the resource.
      */
@@ -26,6 +20,10 @@ class GroupController extends Controller
     {
       $groups = $this->groupService->getAllGroups();
       return response()->json($groups, 200);
+    }
+    public function groupStudents($id){
+      $students = $this->groupService->getGroupStudents($id);
+      return $students;
     }
 
     /**
